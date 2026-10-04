@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Үйдө мектебим – онлайн окуу борбору</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== Премиум Түстөр жана Variable'дар ===== */
+:root {
+  --primary: #0A4D3C;
+  --primary-light: #126B54;
+  --primary-dark: #052E24;
+  --gold: #D4AF37;
+  --gold-light: #F3E5AB;
+  --gold-dark: #AA820A;
+  
+  --bg: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #1C2826;
+  --text-muted: #5A6E68;
+  --border: #E2E8F0;
+  
+  --shadow-sm: 0 2px 8px rgba(10, 77, 60, 0.05);
+  --shadow-md: 0 8px 24px rgba(10, 77, 60, 0.08);
+  --shadow-lg: 0 16px 32px rgba(10, 77, 60, 0.12);
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #09120E;
+  --card: #112019;
+  --text: #ECF2EF;
+  --text-muted: #8A9E95;
+  --border: #1E332A;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: var(--transition);
+}
+
+h1, h2, h3, .logo {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+a { color: inherit; text-decoration: none; }
+.container { width: min(1160px, 92%); margin: 0 auto; }
+.section { padding: 56px 0; }
+
+.title {
+  color: var(--primary);
+  margin-bottom: 24px;
+  font-size: 2rem;
+  position: relative;
+  padding-bottom: 12px;
+}
+[data-theme="dark"] .title, [data-theme="dark"] h3.g, [data-theme="dark"] .back, [data-theme="dark"] .modal-box h2 {
+  color: var(--gold);
+}
+.title::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 60px; height: 4px; background: linear-gradient(90deg, var(--gold), transparent);
+  border-radius: 2px;
+}
+
+/* Кнопкалар */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--primary); color: #fff; border: 0;
+  padding: 12px 24px; border-radius: 12px; cursor: pointer;
+  font-weight: 500; font-size: 1rem; transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(10, 77, 60, 0.2);
+}
+.btn:hover {
+  background: var(--primary-light); transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(10, 77, 60, 0.3);
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: #09120E; font-weight: 600;
+}
+.btn-gold:hover {
+  filter: brightness(1.1); transform: translateY(-2px);
+}
+.btn-sm { padding: 8px 16px; font-size: 0.88rem; border-radius: 8px; }
+.btn-danger { background: #E53E3E; } .btn-danger:hover { background: #C53030; }
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10, 77, 60, 0.95);
+  backdrop-filter: blur(10px); color: #fff;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.logo { font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+.menu { display: flex; gap: 8px; align-items: center; }
+.menu a { padding: 8px 16px; border-radius: 10px; font-weight: 500; transition: var(--transition); opacity: 0.9; }
+.menu a:hover, .menu a.active { background: rgba(255, 255, 255, 0.15); opacity: 1; }
+.menu a.login { border: 1px solid var(--gold); color: var(--gold); }
+.actions { display: flex; gap: 10px; }
+.icon-btn {
+  background: rgba(255, 255, 255, 0.12); color: #fff; border: 0;
+  width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+  font-size: 1.2rem; transition: var(--transition); display: grid; place-items: center;
+}
+.icon-btn:hover { background: rgba(255, 255, 255, 0.25); }
+.burger { display: none; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: #fff; text-align: center; padding: 100px 0 80px;
+  position: relative; overflow: hidden;
+  border-bottom: 4px solid var(--gold);
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.15), transparent 70%);
+}
+.hero-content { position: relative; z-index: 2; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); max-width: 850px; margin: 0 auto 20px; line-height: 1.2; }
+.hero p { max-width: 660px; margin: 0 auto 32px; opacity: 0.9; font-size: 1.1rem; font-weight: 300; }
+
+/* Статистика Блогу */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px; background: var(--card); border: 1px solid var(--border);
+  padding: 24px; border-radius: var(--radius); margin-top: -40px;
+  position: relative; z-index: 10; box-shadow: var(--shadow-md); text-align: center;
+}
+.stat-item h4 { font-size: 1.8rem; color: var(--gold); font-family: 'Playfair Display', serif; }
+.stat-item p { font-size: 0.9rem; color: var(--text-muted); }
+
+/* Карточкалар */
+.grid { display: grid; gap: 24px; }
+.features { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.courses { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  transition: var(--transition); overflow: hidden;
+}
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--gold); }
+.feature { padding: 30px 24px; text-align: center; }
+.feature-icon {
+  width: 60px; height: 60px; background: rgba(212, 175, 55, 0.15);
+  border-radius: 50%; display: grid; place-items: center; font-size: 1.8rem;
+  margin: 0 auto 16px; color: var(--gold);
+}
+h3.g { color: var(--primary); margin: 8px 0; font-size: 1.25rem; }
+.thumb {
+  height: 180px; display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem; background: linear-gradient(135deg, rgba(10,77,60,0.05), rgba(212,175,55,0.15));
+  border-bottom: 2px solid var(--border); overflow: hidden;
+}
+.thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.card-body { padding: 22px; }
+.card-body p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; min-height: 48px; }
+.count {
+  display: inline-block; background: rgba(212, 175, 55, 0.15); color: var(--gold-dark);
+  padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px;
+}
+[data-theme="dark"] .count { color: var(--gold); }
+
+/* Күнүмдүк Аят / Тест Блоктору */
+.daily-quote {
+  background: linear-gradient(135deg, rgba(10,77,60,0.08), rgba(212,175,55,0.08));
+  border-left: 4px solid var(--gold); padding: 24px; border-radius: 12px; margin-bottom: 30px;
+}
+.quiz-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px; box-shadow: var(--shadow-sm);
+}
+.quiz-option {
+  display: block; width: 100%; text-align: left; padding: 12px 18px;
+  margin-top: 10px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; cursor: pointer; transition: var(--transition); font: inherit; color: var(--text);
+}
+.quiz-option:hover { background: rgba(212, 175, 55, 0.15); border-color: var(--gold); }
+
+/* Формалар */
+.input {
+  width: 100%; padding: 12px 16px; border: 1px solid var(--border);
+  border-radius: 10px; background: var(--card); color: var(--text);
+  font: inherit; margin-top: 6px; transition: var(--transition);
+}
+.input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+.chip {
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  padding: 8px 20px; border-radius: 30px; cursor: pointer; font: inherit; transition: var(--transition);
+}
+.chip.on, .chip:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+[data-theme="dark"] .chip.on { background: var(--gold); color: #000; border-color: var(--gold); }
+
+.results { margin-top: 16px; display: grid; gap: 12px; }
+.row { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 0; }
+.head { padding: 32px; margin-bottom: 28px; border-left: 6px solid var(--gold); }
+.topics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.topics span { background: var(--bg); border: 1px solid var(--border); padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; }
+.back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; color: var(--primary); font-weight: 600; }
+
+.admin-wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; align-items: start; }
+.form { padding: 28px; display: grid; gap: 16px; }
+.form label { font-weight: 600; font-size: 0.95rem; }
+.btns { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Modal / Toast */
+.modal {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+}
+.modal.open { display: flex; }
+.modal-box {
+  background: var(--card); border-radius: var(--radius); max-width: 720px; width: 100%;
+  max-height: 85vh; overflow-y: auto; padding: 32px; position: relative;
+  border-top: 6px solid var(--gold); box-shadow: var(--shadow-lg);
+}
+.close { position: absolute; top: 16px; right: 18px; background: none; border: 0; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+.modal-box h2 { color: var(--primary); padding-right: 30px; }
+.modal-box iframe, .modal-box video { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 12px; margin: 16px 0; }
+.mblock { margin-top: 20px; }
+
+#toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translate(-50%, 100px);
+  background: var(--primary-dark); color: #fff; padding: 14px 28px; border-radius: 30px;
+  border: 1px solid var(--gold); transition: var(--transition); z-index: 200; opacity: 0; box-shadow: var(--shadow-lg);
+}
+#toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* Footer */
+.footer {
+  background: var(--primary-dark); color: #E2E8F0; margin-top: 60px;
+  padding-top: 50px; border-top: 4px solid var(--gold);
+}
+.footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px; }
+.footer h4 { color: var(--gold); margin-bottom: 14px; font-size: 1.1rem; }
+.footer li { list-style: none; margin-bottom: 8px; font-size: 0.95rem; opacity: 0.85; }
+.footer a:hover { color: var(--gold); opacity: 1; }
+.copy { text-align: center; padding: 22px; margin-top: 36px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.88rem; opacity: 0.7; }
+
+/* Responsive */
+@media(max-width:900px){ .footer-grid{ grid-template-columns: 1fr 1fr; } .admin-wrap{ grid-template-columns: 1fr; } }
+@media(max-width:768px){
+  .burger{ display: block; }
+  .menu{ position: absolute; top: 72px; left: 0; right: 0; background: var(--primary-dark); flex-direction: column; padding: 16px; display: none; border-bottom: 1px solid var(--border); }
+  .menu.open{ display: flex; } .menu a{ width: 100%; text-align: center; }
+  .hero{ padding: 60px 0 60px; } .row{ flex-direction: column; align-items: flex-start; }
+}
+@media(max-width:480px){ .footer-grid{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header"><div class="container nav">
+  <a class="logo" href="#/">🕌 ҮЙДӨ МЕКТЕБИМ</a>
+  <nav id="menu" class="menu">
+    <a href="#/" data-p="home">Башкы бет</a>
+    <a href="#/courses" data-p="courses">Курстар</a>
+    <a href="#about">Биз жөнүндө</a>
+    <a href="#contact">Байланыш</a>
+    <a href="#/admin" class="login">Кирүү</a>
+  </nav>
+  <div class="actions">
+    <button id="themeBtn" class="icon-btn" aria-label="Тема">🌙</button>
+    <button id="burger" class="icon-btn burger" aria-label="Меню">☰</button>
+  </div>
+</div></header>
+
+<!-- Барактар ушул жерге JS аркылуу чыгат -->
+<main id="view"></main>
+
+<!-- Footer -->
+<footer class="footer"><div class="container">
+  <div class="footer-grid">
+    <div id="about"><h4>Үйдө мектебим</h4><p style="opacity: 0.85;">Үйдөн туруп диний билим алууга ыңгайлуу, ишенимдүү онлайн окуу платформасы.</p></div>
+    <div><h4>Курстар</h4><ul id="fCourses"></ul></div>
+    <div id="contact"><h4>Байланыш</h4><ul><li>📞 +996 223 313 117</li><li>✉️ info@uydomektebim.kg</li><li>📍 Ош шаары Абдылда Койтокурова №10</li></ul></div>
+    <div><h4>Социалдык тармактар</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">Telegram</a></li><li><a href="#">YouTube</a></li></ul></div>
+  </div>
+  <div class="copy">© <span id="year"></span> Үйдө мектебим. Бардык укуктар корголгон.</div>
+</div></footer>
+
+<!-- Modal жана Toast -->
+<div id="modal" class="modal"><div class="modal-box"><button class="close" id="mClose" aria-label="Жабуу">✕</button><div id="mBody"></div></div></div>
+<div id="toast"></div>
+
+<script>
+/* ================= Маалымат ================= */
+const COURSES = [
+  {
+    id:'quran',
+    icon:'📖',
+    img:'Куран Карим.jpg',
+    title:'Куран-и Карим',
+    keys:'куран quran',
+    desc:'Куран окууну үйрөнүү, сүрөлөр жана аяттар менен таанышуу.',
+    topics:['Куран окуу','Сүрөлөр','Аяттар','Сабактар','PDF материалдар','Видео сабактар']
+  },
+  {
+    id:'tajwid',
+    icon:'🎙️',
+    img:'Тажвид.jpg',
+    title:'Тажвид',
+    keys:'тажвид tajwid',
+    desc:'Куранды туура жана кооз окуу эрежелери.',
+    topics:['Тажвид эрежелери','Тамгалардын айтылышы','Махраж','Сабактар','PDF материалдар','Видео сабактар']
+  },
+  {
+    id:'ilmihal',
+    icon:'🕌',
+    img:'Илмихал.jpg',
+    title:'Илмихал',
+    keys:'илмихал ilmihal ибадат',
+    desc:'Күнүмдүк ибадат жана диний маселелер боюнча негизги билим.',
+    topics:['Ибадат маселелери','Даарат','Намаз','Орозо','Зекет','Башка сабактар']
+  },
+  {
+    id:'siyar',
+    icon:'🌙',
+    img:"Сияр Наби.jpg",
+    title:'Сияр Наби',
+    keys:'сияр siyar пайгамбар',
+    desc:'Пайгамбарыбыздын ﷺ өмүр баяны жана маанилүү окуялар.',
+    topics:['Пайгамбарыбыздын ﷺ өмүр баяны','Мекке доору','Медина доору','Маанилүү окуялар','Сабактар','Материалдар']
+  }
+];
+
+/* ================= localStorage ================= */
+const store = {
+  get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}}
+};
+const KEY='um_lessons';
+const getLessons=()=>store.get(KEY,[]);
+const saveLessons=l=>store.set(KEY,l);
+const getCourse=id=>COURSES.find(c=>c.id===id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const $=id=>document.getElementById(id);
+
+/* Демо сабактар */
+(function seed(){
+  if(store.get(KEY,null))return;
+  const list=[];
+  COURSES.forEach(c=>c.topics.forEach((t,i)=>list.push({
+    id:c.id+'_'+i,courseId:c.id,title:t,
+    text:`Бул сабакта «${t}» темасы боюнча негизги маалымат берилет. Жаңы материалды «Кирүү» бөлүмүнөн кошсоңуз болот.`,
+    pdfName:'',pdfData:'',video:'',date:new Date().toLocaleDateString('ky-KG')})));
+  saveLessons(list);
+})();
+
+/* ================= Toast жана Modal ================= */
+function toast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600);
+}
+function openModal(html){$('mBody').innerHTML=html;$('modal').classList.add('open')}
+function closeModal(){$('modal').classList.remove('open');$('mBody').innerHTML=''}
+
+function videoHtml(u){
+  const yt=u.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
+  if(yt)return `<iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen></iframe>`;
+  if(/\.(mp4|webm)(\?.*)?$/i.test(u))return `<video src="${esc(u)}" controls></video>`;
+  return `<a class="btn btn-sm" href="${esc(u)}" target="_blank" rel="noopener">▶ Видеону ачуу</a>`;
+}
+function showLesson(id){
+  const l=getLessons().find(x=>x.id===id);if(!l)return;
+  const c=getCourse(l.courseId);
+  openModal(`<h2>${esc(l.title)}</h2><p class="muted" style="color:var(--text-muted);">${c?esc(c.title):''} • ${esc(l.date)}</p>
+  <div class="mblock"><h4>📝 Тексттик маалымат</h4><p style="margin-top:6px;">${esc(l.text).replace(/\n/g,'<br>')}</p></div>
+  <div class="mblock"><h4>📄 PDF материал</h4>${l.pdfData?`<a class="btn btn-sm" style="margin-top:6px;" href="${l.pdfData}" download="${esc(l.pdfName)}">${esc(l.pdfName)} – жүктөп алуу</a>`:'<p style="color:var(--text-muted); font-size:0.9rem;">PDF кошула элек.</p>'}</div>
+  <div class="mblock"><h4>🎬 Видео материал</h4>${l.video?videoHtml(l.video):'<p style="color:var(--text-muted); font-size:0.9rem;">Видео кошула элек.</p>'}</div>`);
+}
+
+/* ================= Көрүнүштөр (views) ================= */
+function courseCard(c){
+  const n=getLessons().filter(l=>l.courseId===c.id).length;
+  const thumbContent = c.img ? `<img src="${esc(c.img)}" alt="${esc(c.title)}">` : c.icon;
+  
+  return `<article class="card"><div class="thumb" role="img">${thumbContent}</div>
+  <div class="card-body"><h3 class="g">${c.title}</h3><p>${c.desc}</p>
+  <span class="count">${n} сабак</span><br><a class="btn btn-sm" href="#/course/${c.id}">Курска кирүү</a></div></article>`;
+}
+const searchBox=`<input id="searchInput" class="input" type="search" placeholder="Куран, Тажвид, Илмихал же сабактын аталышы..."><div id="searchResults" class="results"></div>`;
+
+/* Чакан викторина / Тест функциясы */
+function checkQuiz(ans) {
+  const res = $('quizResult');
+  if(ans === 2) {
+    res.innerHTML = '<span style="color:#2E7D32; font-weight:600;">✅ Туура! Куранда 114 сүрө бар.</span>';
+  } else {
+    res.innerHTML = '<span style="color:#C62828; font-weight:600;">❌ Туура эмес, кайра аракет кылыңыз.</span>';
+  }
+}
+
+function viewHome(){
+  const totalLessons = getLessons().length;
+  return `<section class="hero"><div class="container hero-content">
+    <h1>Илим алуу — ар бир мусулманга фарз</h1>
+    <p>Куран, Тажвид, Илмихал жана Сияр Наби боюнча түшүнүктүү сабактар, PDF жана видео материалдар сизге ыңгайлуу форматта.</p>
+    <a href="#/courses" class="btn btn-gold">Окууну баштоо</a></div></section>
+  
+  <div class="container">
+    <div class="stats-bar">
+      <div class="stat-item"><h4>4</h4><p>Негизги багыт</p></div>
+      <div class="stat-item"><h4>${totalLessons}</h4><p>Жалпы сабактар</p></div>
+      <div class="stat-item"><h4>100%</h4><p>Үйдөн окуу</p></div>
+      <div class="stat-item"><h4>Free</h4><p>Ачык билим</p></div>
+    </div>
+  </div>
+
+  <section class="container section">
+    <div class="daily-quote">
+      <h4 style="color:var(--gold-dark); margin-bottom:6px;">🌟 Күндүн хадиси</h4>
+      <p style="font-style:italic;">«Силердин эң жакшыңар — Куранды үйрөнгөн жана аны башкаларга үйрөткөнүңөр.» (Бухари)</p>
+    </div>
+  </section>
+
+  <section class="container section" style="padding-top:0;">
+    <h2 class="title">Артыкчылыктарыбыз</h2>
+    <div class="grid features">
+      <div class="card feature"><div class="feature-icon">🏠</div><h3 class="g">Үйдөн окуу</h3><p style="color:var(--text-muted); font-size:0.9rem;">Убактыңызды үнөмдөп, үйүңүздөн чыкпай эле илим алыңыз.</p></div>
+      <div class="card feature"><div class="feature-icon">⏰</div><h3 class="g">Ыңгайлуу убакыт</h3><p style="color:var(--text-muted); font-size:0.9rem;">Графикке байланбай, өзүңүзгө ылайык учурда окуңуз.</p></div>
+      <div class="card feature"><div class="feature-icon">🎓</div><h3 class="g">Иреттүү программа</h3><p style="color:var(--text-muted); font-size:0.9rem;">Жөнөкөйдөн татаалга карай системалуу түзүлгөн.</p></div>
+      <div class="card feature"><div class="feature-icon">📚</div><h3 class="g">Мультимедиа</h3><p style="color:var(--text-muted); font-size:0.9rem;">Текст, PDF конспект жана видео сабактар бириктирилген.</p></div>
+    </div>
+  </section>
+
+  <section class="container section"><h2 class="title">Издөө</h2>${searchBox}</section>
+  <section class="container section"><h2 class="title">Курстар</h2><div class="grid courses">${COURSES.map(courseCard).join('')}</div></section>
+  
+  <section class="container section">
+    <h2 class="title">Өзүңүздү текшериңиз</h2>
+    <div class="quiz-card">
+      <h3 style="margin-bottom:12px;">❓ Куран-и Каримде канча сүрө бар?</h3>
+      <button class="quiz-option" onclick="checkQuiz(1)">A) 110 сүрө</button>
+      <button class="quiz-option" onclick="checkQuiz(2)">B) 114 сүрө</button>
+      <button class="quiz-option" onclick="checkQuiz(3)">C) 120 сүрө</button>
+      <div id="quizResult" style="margin-top:16px;"></div>
+    </div>
+  </section>`;
+}
+
+function viewCourses(){
+  return `<div class="container section"><h1 class="title">Бардык курстар</h1>${searchBox}
+  <div id="chips" class="chips">${[{id:'all',title:'Бардыгы'},...COURSES].map(c=>`<button class="chip ${c.id==='all'?'on':''}" data-chip="${c.id}">${c.title}</button>`).join('')}</div>
+  <div id="courseGrid" class="grid courses">${COURSES.map(courseCard).join('')}</div></div>`;
+}
+
+function viewCourse(id){
+  const c=getCourse(id);
+  if(!c)return `<div class="container section"><p>Курс табылган жок.</p><a class="back" href="#/courses">← Курстарга кайтуу</a></div>`;
+  const ls=getLessons().filter(l=>l.courseId===id);
+  
+  const headerImage = c.img ? `<div style="max-width:220px; margin-bottom:16px; border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm);"><img src="${esc(c.img)}" alt="${esc(c.title)}" style="width:100%; display:block;"></div>` : '';
+
+  return `<div class="container section"><a class="back" href="#/courses">← Бардык курстар</a>
+  <div class="card head">
+    ${headerImage}
+    <h1 class="title" style="margin-bottom:8px;">${c.icon} ${c.title}</h1><p style="color:var(--text-muted);">${c.desc}</p>
+    <div class="topics">${c.topics.map(t=>`<span>${t}</span>`).join('')}</div>
+    <p style="margin-top:16px; font-size:0.95rem;">Сабактардын саны: <b>${ls.length}</b></p>
+    <a class="btn btn-gold btn-sm" style="margin-top:14px;" href="#/admin">＋ Материал кошуу</a></div>
+  <h2 class="title">Сабактардын тизмеси</h2>
+  ${ls.length?ls.map((l,i)=>`<div class="card row"><div><b>${i+1}.${esc(l.title)}</b><br>
+    <small style="color:var(--text-muted);">${l.pdfData?'📄 PDF ':''}${l.video?'🎬 Видео ':''}📝 Текст • ${esc(l.date)}</small></div>
+    <button class="btn btn-sm" data-open="${l.id}">Сабакты ачуу</button></div>`).join(''):'<p style="color:var(--text-muted);">Азырынча сабак жок.</p>'}</div>`;
+}
+
+function viewAdmin(){
+  return `<div class="container section"><h1 class="title">Материал кошуу (Админ панель)</h1><div class="admin-wrap">
+  <form id="lessonForm" class="card form">
+    <label>Курс<select id="fCourse" class="input">${COURSES.map(c=>`<option value="${c.id}">${c.title}</option>`).join('')}</select></label>
+    <label>Сабактын аталышы<input id="fTitle" class="input" required placeholder="Мисалы: Фатиха сүрөсү"></label>
+    <label>Сабактын тексти<textarea id="fText" class="input" rows="5" required placeholder="Сабактын мазмуну..."></textarea></label>
+    <label>PDF файл (2 МБ чейин)<input id="fPdf" class="input" type="file" accept="application/pdf"></label>
+    <label>Видео URL (YouTube же .mp4)<input id="fVideo" class="input" type="url" placeholder="https://www.youtube.com/watch?v=..."></label>
+    <button class="btn" type="submit">Сактоо</button></form>
+  <div><h2>Кошулган материалдар</h2><div id="adminList" class="results"></div></div></div></div>`;
+}
+
+function renderAdminList(){
+  const all=getLessons().slice().reverse();
+  $('adminList').innerHTML=all.length?all.map(l=>`<div class="card row" style="margin:0"><div><b>${esc(l.title)}</b><br>
+    <small style="color:var(--text-muted);">${esc(getCourse(l.courseId)?.title||'')} • ${l.pdfData?'📄 ':''}${l.video?'🎬 ':''}${esc(l.date)}</small></div>
+    <div class="btns"><button class="btn btn-sm" data-open="${l.id}">Көрүү</button>
+    <button class="btn btn-sm btn-danger" data-del="${l.id}">Өчүрүү</button></div></div>`).join(''):'<p style="color:var(--text-muted);">Материал жок.</p>';
+}
+
+/* ================= Издөө ================= */
+function bindSearch(){
+  const inp=$('searchInput');if(!inp)return;
+  inp.oninput=()=>{
+    const q=inp.value.trim().toLowerCase(),out=$('searchResults');
+    if(!q){out.innerHTML='';return}
+    const cs=COURSES.filter(c=>(c.title+c.keys+c.desc+c.topics.join(' ')).toLowerCase().includes(q));
+    const ls=getLessons().filter(l=>(l.title+' '+l.text).toLowerCase().includes(q)).slice(0,12);
+    out.innerHTML=cs.map(c=>`<div class="card row" style="margin:0"><span>${c.icon} <b>${c.title}</b> – курс</span><a class="btn btn-sm" href="#/course/${c.id}">Ачуу</a></div>`).join('')+
+      ls.map(l=>`<div class="card row" style="margin:0"><span>📘 <b>${esc(l.title)}</b> <small style="color:var(--text-muted);">(${getCourse(l.courseId)?.title||''})</small></span><button class="btn btn-sm" data-open="${l.id}">Сабакты ачуу</button></div>`).join('')||'<p style="color:var(--text-muted);">Эч нерсе табылган жок.</p>';
+  };
+}
+
+/* ================= Админ форма ================= */
+function bindAdmin(){
+  const f=$('lessonForm');if(!f)return;
+  renderAdminList();
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    const file=$('fPdf').files[0];let pdfData='',pdfName='';
+    if(file){
+      if(file.type!=='application/pdf')return toast('⚠️ Бир гана PDF файл тандаңыз');
+      if(file.size>2*1024*1024)return toast('⚠️ PDF 2 МБ дан чоң болбошу керек');
+      pdfData=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(file)});
+      pdfName=file.name;
+    }
+    const all=getLessons();
+    all.push({id:'l_'+Date.now(),courseId:$('fCourse').value,title:$('fTitle').value.trim(),text:$('fText').value.trim(),
+      pdfName,pdfData,video:$('fVideo').value.trim(),date:new Date().toLocaleDateString('ky-KG')});
+    if(!saveLessons(all))return toast('❌ Орун жетишсиз. Кичирээк PDF тандаңыз');
+    f.reset();renderAdminList();toast('✅ Сабак ийгиликтүү сакталды');
+  };
+}
+
+/* ================= Роутер ================= */
+function route(){
+  const h=location.hash;
+  if(h==='#about'||h==='#contact'){
+    const el=$(h.slice(1));
+    if(el) el.scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  const parts=h.replace(/^#\/?/,'').split('/');
+  const page=parts[0]||'home';
+  $('view').innerHTML=page==='courses'?viewCourses():page==='course'?viewCourse(parts[1]):page==='admin'?viewAdmin():viewHome();
+  document.querySelectorAll('#menu a[data-p]').forEach(a=>a.classList.toggle('active',a.dataset.p===(page==='course'?'courses':page)));
+  $('menu').classList.remove('open');
+  window.scrollTo(0,0);
+  bindSearch();bindAdmin();
+}
+window.addEventListener('hashchange',route);
+
+/* ================= Глобалдык окуялар ================= */
+document.addEventListener('click',e=>{
+  const o=e.target.closest('[data-open]'),d=e.target.closest('[data-del]'),c=e.target.closest('[data-chip]');
+  if(o)showLesson(o.dataset.open);
+  if(d&&confirm('Бул сабакты өчүрөсүзбү?')){
+    saveLessons(getLessons().filter(l=>l.id!==d.dataset.del));renderAdminList();toast('🗑️️ Сабак өчүрүлдү');
+  }
+  if(c){
+    document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));
+    $('courseGrid').innerHTML=COURSES.filter(k=>c.dataset.chip==='all'||k.id===c.dataset.chip).map(courseCard).join('');
+  }
+});
+$('mClose').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+$('burger').onclick=()=>$('menu').classList.toggle('open');
+document.querySelectorAll('#menu a').forEach(a=>a.addEventListener('click',()=>$('menu').classList.remove('open')));
+
+/* Dark / Light mode */
+const applyTheme=t=>{document.documentElement.setAttribute('data-theme',t);$('themeBtn').textContent=t==='dark'?'☀️':'🌙'};
+applyTheme(store.get('um_theme','light'));
+$('themeBtn').onclick=()=>{
+  const t=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  store.set('um_theme',t);applyTheme(t);
+};
+
+/* Footer жана баштапкы жүктөө */
+$('fCourses').innerHTML=COURSES.map(c=>`<li><a href="#/course/${c.id}">${c.title}</a></li>`).join('');
+$('year').textContent=new Date().getFullYear();
+route();
+</script>
+</body>
+</html>
